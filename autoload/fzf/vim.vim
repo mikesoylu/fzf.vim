@@ -212,7 +212,7 @@ function! fzf#vim#lines(...)
   return s:fzf(fzf#vim#wrap({
   \ 'source':  fzf#vim#_lines(1),
   \ 'sink*':   s:function('s:line_handler'),
-  \ 'options': '+m --tiebreak=index --prompt "Lines> " --ansi --extended --nth=3.. --reverse --tabstop='.&tabstop
+  \ 'options': '+m --tiebreak=index --prompt "Lines> " --ansi --extended --nth=3.. --reverse'
   \}), a:000)
 endfunction
 
@@ -242,7 +242,7 @@ function! fzf#vim#buffer_lines(...)
   return s:fzf(fzf#vim#wrap({
   \ 'source':  s:buffer_lines(),
   \ 'sink*':   s:function('s:buffer_line_handler'),
-  \ 'options': '+m --tiebreak=index --prompt "BLines> " --ansi --extended --nth=2.. --reverse --tabstop='.&tabstop
+  \ 'options': '+m --tiebreak=index --prompt "BLines> " --ansi --extended --nth=2.. --reverse'
   \}), a:000)
 endfunction
 
@@ -338,13 +338,8 @@ endfunction
 " ------------------------------------------------------------------
 
 function! fzf#vim#gitfiles(...)
-  let root = systemlist('git rev-parse --show-toplevel')[0]
-  if v:shell_error
-    return s:warn('Not in git repo')
-  endif
   return s:fzf(fzf#vim#wrap({
   \ 'source':  'git ls-tree --name-only -r HEAD',
-  \ 'dir':     root,
   \ 'options': '-m --prompt "GitFiles> "'
   \}), a:000)
 endfunction
@@ -453,11 +448,11 @@ function! fzf#vim#ag(query, ...)
   let args = copy(a:000)
   let ag_opts = len(args) > 1 ? remove(args, 0) : ''
   return s:fzf(fzf#vim#wrap({
-  \ 'source':  printf('ag --nogroup --column --color %s "%s"',
+  \ 'source':  printf('ag --hidden --nogroup --column --color %s "%s"',
   \                   ag_opts,
   \                   escape(empty(a:query) ? '^(?=.)' : a:query, '"\-')),
   \ 'sink*':    s:function('s:ag_handler'),
-  \ 'options': '--ansi --delimiter : --nth 4..,.. --prompt "Ag> " '.
+  \ 'options': '--ansi --delimiter : --nth 4.. --prompt "Ag> " '.
   \            '--multi --bind alt-a:select-all,alt-d:deselect-all '.
   \            '--color hl:68,hl+:110'}), args)
 endfunction
